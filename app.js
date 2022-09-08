@@ -6,6 +6,7 @@ const { errors, celebrate, Joi } = require('celebrate');
 const { createUser, login, logout } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
+const rateLimiter = require('./middlewares/rateLimiter');
 
 const { PORT = 3000 } = process.env;
 
@@ -19,6 +20,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(requestLogger);
+
+app.use(rateLimiter);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
