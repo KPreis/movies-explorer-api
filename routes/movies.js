@@ -18,7 +18,7 @@ router.post('/', celebrate({
     image: Joi.string().required().regex(regExp),
     trailerLink: Joi.string().required().regex(regExp),
     thumbnail: Joi.string().required().regex(regExp),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
@@ -26,6 +26,10 @@ router.post('/', celebrate({
 
 router.get('/', getMovies);
 
-router.delete('/:movieId', deleteMovieById);
+router.delete('/:movieId', celebrate({
+  params: Joi.object().keys({
+    movieId: Joi.string().required(),
+  }),
+}), deleteMovieById);
 
 module.exports = router;

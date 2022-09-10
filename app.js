@@ -7,12 +7,13 @@ const { createUser, login, logout } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const rateLimiter = require('./middlewares/rateLimiter');
+require('dotenv').config();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, NODE_ENV, DB_ENV } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/moviesdb', {
+mongoose.connect(NODE_ENV === 'production' ? DB_ENV : 'mongodb://127.0.0.1:27017/moviesdb', {
   useNewUrlParser: true,
 });
 
@@ -38,9 +39,9 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.get('/signout', logout);
-
 app.use(auth);
+
+app.get('/signout', logout);
 
 app.use('/users', require('./routes/users'));
 
