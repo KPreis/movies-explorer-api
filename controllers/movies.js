@@ -53,7 +53,7 @@ module.exports.deleteMovieById = (req, res, next) => {
       if (String(movie.owner._id) !== req.user._id) {
         throw new ForbiddenError('Вы не можете удалить фильм из чужой коллекции');
       } else {
-        Movie.findByIdAndRemove(String(req.params.movieId))
+        Movie.findByIdAndRemove(req.params.movieId)
           .then((result) => {
             res.send(result);
           })
@@ -69,10 +69,9 @@ module.exports.deleteMovieById = (req, res, next) => {
 };
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => {
-      const mov = movies.filter((index, movie) => String(movies[movie].owner) === req.user._id);
-      res.send(mov);
+      res.send(movies);
     })
     .catch(next);
 };

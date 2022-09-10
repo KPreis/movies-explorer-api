@@ -50,8 +50,6 @@ module.exports.login = (req, res, next) => {
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }, 'Domain=movies.kpreis.nomoredomains.sbs').send({
         _id: user._id,
         name: user.name,
-        about: user.about,
-        avatar: user.avatar,
         email: user.email,
       });
     })
