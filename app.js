@@ -3,11 +3,21 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
+const cors = require('cors');
 const { createUser, login, logout } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
 const rateLimiter = require('./middlewares/rateLimiter');
 require('dotenv').config();
+
+const corsOptions = {
+  origin: [
+    'http://movies.kpreis.nomoredomains.sbs',
+    'https://movies.kpreis.nomoredomains.sbs',
+    'http://localhost:3001',
+  ],
+  credentials: true,
+};
 
 const { PORT = 3000, NODE_ENV, DB_ENV } = process.env;
 
@@ -21,6 +31,8 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(requestLogger);
+
+app.use(cors(corsOptions));
 
 app.use(rateLimiter);
 
